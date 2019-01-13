@@ -18,12 +18,11 @@ class TestSudukuGrid(unittest.TestCase):
             self.grid[i] = SudukuAlphabet.VALUES[(i+(i//9)*3+i//27)%9]
 #        self.grid.print_grid()
 
-    def test_getSquare(self):
-        square = self.grid.getSquare(0)
+    def test_get_square(self):
+        square = self.grid.get_square(0)
         for i in range(3):
             for j in range(3):
-#                print("[{},{}] = {} ; computed = {}".format(i, j, square[i,j].getValue(), i*3+j+1))
-                self.assertEqual(i*3+j+1, square[i,j].getValue())
+                self.assertEqual(i*3+j+1, square[i,j].get_value())
 
 
     def test_is_completed(self):

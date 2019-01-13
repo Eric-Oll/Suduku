@@ -9,27 +9,27 @@ class BaseCase:
     """
     Classe de base pour les case du Suduku
     """
-    def __init__(self, value=None, line_index=0, column_index=0):
+    def __init__(self, line_index=0, column_index=0, value=None):
         self.line = line_index
         self.column = column_index
         self.value = value
 
-    def getValue(self):
+    def get_value(self):
         return self.value
 
-    def setValue(self, value):
+    def set_value(self, value):
         self.value = value
 
     def is_empty(self):
         return self.value is None
 
-    def getPosition(self):
+    def get_position(self):
         return self.line, self.column
 
-    def getLine(self):
+    def get_line(self):
         return self.line
 
-    def getColumn(self):
+    def get_column(self):
         return self.column
 
     def __eq__(self, other):
@@ -43,7 +43,7 @@ class BaseCase:
             return False
 
     def __str__(self):
-        return str(self.getValue())
+        return str(self.get_value())
 
     def __repr__(self):
         return f"<BaseCase : value={self.value}, position=[{self.line},{self.column}]>"

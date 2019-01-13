@@ -44,23 +44,32 @@ class SudukuGrid:
                     print(" {} ".format(case), end="")
             print()
 
-    def getCase(self, line, column):
+    def get_case(self, line, column):
         if line < SudukuGrid.NB_LINES and column < SudukuGrid.NB_COLS:
             return self.grid[line][column]
         else:
             return None
 
-    def getLine(self, line):
+    def get_cases(self):
+        return [case for line in self.grid for case in line]
+
+    def get_empty_cases(self):
+        return [case for line in self.grid for case in line if case.is_empty()]
+
+    def set_case(self, case):
+        self.grid[case.get_line()][case.get_column()] = case
+
+    def get_line(self, line):
         if line < SudukuGrid.NB_LINES:
             return SudukuLine(self.grid[line])
         else:
             return None
 
-    def getColumn(self, column):
+    def get_column(self, column):
         if column < SudukuGrid.NB_COLS:
             return SudukuColumn([self[i, column] for i in range(SudukuGrid.NB_LINES)])
 
-    def getSquare(self, square):
+    def get_square(self, square):
         """
         Retourne le carré correspondant au square
         - soit via le n° de de carré
@@ -93,7 +102,6 @@ class SudukuGrid:
             ------------------------------
 
        """
-        # TODO : getSquare() à faire
         if isinstance(square, tuple):
             # Cas des coordonnées
             lig, col = square
@@ -110,32 +118,36 @@ class SudukuGrid:
                              ])
 
     def get_subgrids(self):
-        return itertools.chains(
-                (self.getLine(i) for i in range(SudukuGrid.NB_LINES)),
-                (self.getColumn(i) for i in range(SudukuGrid.NB_COLS)),
-                (self.getSquare(i) for i in range(SudukuGrid.NB_LINES))
+        return itertools.chain(
+                (self.get_line(i) for i in range(SudukuGrid.NB_LINES)),
+                (self.get_column(i) for i in range(SudukuGrid.NB_COLS)),
+                (self.get_square(i) for i in range(SudukuGrid.NB_LINES))
                 )
 
     def is_completed(self):
         """
         Controle si la grille est complète et valide
         """
-        # Controle des lignes
-        control_line =  [self.getLine(i).is_completed() for i in range(SudukuGrid.NB_LINES)]
-        if not all(control_line):
-            log.debug("Lignes : "+str(control_line))
+        control_list =  []
+        for subgrid in self.get_subgrids():
+            control_list.append(subgrid.is_completed())
+        return all(control_list)
 
-        # Controle des colonnes
-        control_column = [self.getColumn(i).is_completed() for i in range(SudukuGrid.NB_COLS)]
-        if not all(control_column):
-            log.debug("Colonnes : "+str(control_column))
-
-        # Controle des carrés
-        control_square = [self.getSquare(i).is_completed() for i in range(SudukuGrid.NB_LINES)]
-        if not all(control_square):
-            log.debug("Carres : "+str(control_square))
-
-        return all(control_line) and all(control_column) and all(control_square)
+    def is_invalid(self):
+        """
+        Vérifie si la grille comporte une incohérence
+        (même valeur dans une sous-grille)
+        return :
+            - True si une incohérence est trouvé
+            - False sinon
+        """
+        for subgrid in self.get_subgrids():
+            list_values = subgrid.get_values()
+            while len(list_values) > 0:
+                valeur = list_values.pop()
+                if valeur in list_values:
+                    return True
+        return False
 
     def __getitem__(self, index):
         """
@@ -143,7 +155,7 @@ class SudukuGrid:
         exemple : Suduku[i,j]
         """
         if isinstance(index, tuple) and len(index)==2:
-            return self.getCase(line=index[0], column=index[1])
+            return self.get_case(line=index[0], column=index[1])
 
     def __setitem__(self, index, value):
         if isinstance(index, tuple):
@@ -155,7 +167,7 @@ class SudukuGrid:
         if isinstance(value, BaseCase):
             self.grid[lig][col] = value
         elif isinstance(value, int) or value is None:
-            self.grid[lig][col].setValue(value)
+            self.grid[lig][col].set_value(value)
         else:
             raise ValueError(f"Type de valeur non reconnu : {type(value)}")
 
@@ -178,7 +190,6 @@ class SudukuGrid:
                     self[lig, j] = int(value) if value != '0' else None
                 line = file.readline()
                 lig += 1
-        self.print_grid()
 
 
 # EOF SudukuGrid.py

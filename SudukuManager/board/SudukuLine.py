@@ -11,5 +11,5 @@ class SudukuLine(BaseSubgrid):
     """Représente une ligne d'une grille de Suduku"""
     def __init__(self, data_line=[]):
         BaseSubgrid.__init__(self, case_list= sorted(data_line,
-                                                     key=lambda x: x.getLine()))
+                                                     key=lambda x: x.get_line()))
 

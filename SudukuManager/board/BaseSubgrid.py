@@ -9,23 +9,26 @@ from SudukuManager.board.BaseCase import BaseCase
 
 class BaseSubgrid:
     def __init__(self, case_list=[]):
-        self.values = case_list
+        self.cases = case_list
 
-    def getCase(self, index):
-        if index<len(self.values):
-            return self.values[index]
+    def get_case(self, index):
+        if index<len(self.cases):
+            return self.cases[index]
 
-    def setCase(self, index, value):
-        if index < len(self.values):
+    def set_case(self, index, value):
+        if index < len(self.cases):
             if isinstance(value, BaseCase):
                 self.values[index] = value
             elif isinstance(value, int) or value is None:
-                self.values[index].setValue(value)
+                self.cases[index].set_value(value)
             else:
                 raise ValueError(f"<{self.__class__}.setCase : Type de valeur non reconnu : {type(value)}")
 
-    def getCases(self):
-        return self.values
+    def get_values(self):
+        return [case.get_value() for case in self.get_cases() if not case.is_empty()]
+
+    def get_cases(self):
+        return self.cases
 
     def is_completed(self):
         """
@@ -33,7 +36,7 @@ class BaseSubgrid:
             - True : si la ligne est complète et valide
             - False sinon
         """
-        values = [x.getValue() for x in self.values if x.getValue() is not None]
+        values = [x.get_value() for x in self.cases if not x.is_empty()]
         if len(values) != len(SudukuAlphabet.VALUES):
             return False
         for i, item in  enumerate(sorted(values)):
@@ -42,7 +45,7 @@ class BaseSubgrid:
         return True
 
     def __getitem__(self, index):
-        return self.getCase(index)
+        return self.get_case(index)
 
     def __setitem__(self, index, value):
-        self.setCase(index, value)
+        self.set_case(index, value)
