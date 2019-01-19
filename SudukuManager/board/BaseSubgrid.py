@@ -30,6 +30,9 @@ class BaseSubgrid:
     def get_cases(self):
         return self.cases
 
+    def iter_empty_cases(self):
+        return (case for case in self.cases if case.is_empty())
+
     def is_completed(self):
         """
         Return :

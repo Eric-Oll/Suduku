@@ -10,6 +10,7 @@ from SudukuManager.board.SudukuLine import SudukuLine
 from SudukuManager.board.BaseCase import BaseCase
 
 class TestSudukuLine(unittest.TestCase):
+
     def test_is_completed(self):
         # Création d'un ligne complète
         line_test = SudukuLine([BaseCase(value=i+1, line_index=0, column_index=i) for i in range(9)])

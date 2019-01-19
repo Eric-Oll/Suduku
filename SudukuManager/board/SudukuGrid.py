@@ -31,7 +31,10 @@ class SudukuGrid:
                 column.append(type_case(line_index=i, column_index=j))
             self.grid.append(column)
 
-    def print_grid(self):
+    def print_grid(self, title=None):
+        if title is not None:
+            print("-"*(3*10))
+            print(f"{title: ^30}")
         for i, line in enumerate(self.grid):
             if i%3 == 0:
                 print("-"*(3*10))
@@ -43,6 +46,7 @@ class SudukuGrid:
                 else:
                     print(" {} ".format(case), end="")
             print()
+        print("-"*(3*10))
 
     def get_case(self, line, column):
         if line < SudukuGrid.NB_LINES and column < SudukuGrid.NB_COLS:
@@ -58,6 +62,9 @@ class SudukuGrid:
 
     def set_case(self, case):
         self.grid[case.get_line()][case.get_column()] = case
+
+    def iter_lines(self):
+        return (self.get_line(i) for i in range(SudukuGrid.NB_LINES))
 
     def get_line(self, line):
         if line < SudukuGrid.NB_LINES:
@@ -149,6 +156,9 @@ class SudukuGrid:
                     return True
         return False
 
+# =============================================================================
+# Special Methods
+# =============================================================================
     def __getitem__(self, index):
         """
         Retour la case de la grille en position [i,j]
@@ -170,6 +180,19 @@ class SudukuGrid:
             self.grid[lig][col].set_value(value)
         else:
             raise ValueError(f"Type de valeur non reconnu : {type(value)}")
+
+    def __str__(self):
+        result = ""
+        for i, line in enumerate(self.grid):
+            if i%3 == 0:
+                result += "-"*(3*10+1)+"\n"
+            for j, case in enumerate(line):
+                if j%3 == 0:
+                    result += "|"
+                result += " " + str(case) + " "
+            result += "|\n"
+        result += "-"*(3*10+1)+"\n"
+        return result
 
 
     def load_grid(self, filename):

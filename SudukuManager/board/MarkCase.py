@@ -48,9 +48,11 @@ class MarkedCase(BaseCase):
         for value in values:
             if self.is_marked(value):
                 self.marks.remove(value)
+#                print(repr(self)+ ': suppression de la marque ',str(value)) # DEBUG
 
         if len(self.marks) == 1:
-            self.set_value(self.marks.pop())
+            self.set_value(self.marks.pop(0))
+#            print(repr(self)+ ': Valeur trouvé ',str(self.get_value())) # DEBUG
             return True
         else:
             return False
