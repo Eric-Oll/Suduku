@@ -24,7 +24,6 @@ class SudukuSolverByMarker:
         # Chargement de la grille
         if filename is not None:
             self.grid.load_grid(filename)
-            self.grid.print_grid()
 
     def copy(self):
         """Retourne une copie de l'objet"""
@@ -37,6 +36,9 @@ class SudukuSolverByMarker:
         return newGridSolver
 
     def print_markers(self):
+        """
+        Affiche le marquqge
+        """
         for i, line in enumerate(self.grid.iter_lines()):
             if i%3 == 0:
                 print("-"*(3*65))
@@ -52,6 +54,9 @@ class SudukuSolverByMarker:
         print("-"*(3*65)+"\n")
 
     def updateMarkers(self):
+        """
+        Met à jour le marquage des cases en fonction des valeurs trouvées.
+        """
         list_cases = [case for case in self.grid.get_cases() if case.is_empty()]
 
         while len(list_cases) > 0:
@@ -79,12 +84,13 @@ class SudukuSolverByMarker:
                         list_cases.append(case)
 
     def get_any_empty_case(self):
+        """Retour une case non trouvé"""
         for case in self.grid.get_empty_cases():
             return case
 
     def solve(self):
         """
-        Tente de résoudre la grille avec l'hypothèse 'assumption_case'
+        Rrésoud la grille avec la méthode des marquages et d'hypothèses de valeur
         Return :
             - COMPLETED : si une solution est trouvée
             - INVALID_GRID : si l'on arrive à une incohérence
